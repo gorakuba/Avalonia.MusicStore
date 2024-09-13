@@ -1,12 +1,7 @@
-﻿using Avalonia.Media.Imaging;
+﻿using System.Threading.Tasks;
+using Avalonia.Media.Imaging;
 using Avalonia.MusicStore.Models;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
 
 namespace Avalonia.MusicStore.ViewModels
 {
@@ -33,10 +28,8 @@ namespace Avalonia.MusicStore.ViewModels
 
         public async Task LoadCover()
         {
-            await using (var imageStream = await _album.LoadCoverBitmapAsync())
-            {
-                Cover = await Task.Run(() => Bitmap.DecodeToWidth(imageStream, 400));
-            }
+            await using var imageStream = await _album.LoadCoverBitmapAsync();
+            Cover = await Task.Run(() => Bitmap.DecodeToWidth(imageStream, 400));
         }
 
         public async Task SaveToDiskAsync()
@@ -49,10 +42,8 @@ namespace Avalonia.MusicStore.ViewModels
 
                 await Task.Run(() =>
                 {
-                    using (var fs = _album.SaveCoverBitmapStream())
-                    {
-                        bitmap.Save(fs);
-                    }
+                    using var fs = _album.SaveCoverBitmapStream();
+                    bitmap.Save(fs);
                 });
             }
         }

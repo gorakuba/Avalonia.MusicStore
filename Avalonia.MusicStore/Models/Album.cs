@@ -1,8 +1,10 @@
 ﻿using iTunesSearch.Library;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -91,7 +93,7 @@ namespace Avalonia.MusicStore.Models
                 if (!string.IsNullOrWhiteSpace(new DirectoryInfo(file).Extension)) continue;
 
                 await using var fs = File.OpenRead(file);
-                results.Add(await Album.LoadFromStream(fs).ConfigureAwait(false));
+                results.Add(await LoadFromStream(fs).ConfigureAwait(false));
             }
 
             return results;

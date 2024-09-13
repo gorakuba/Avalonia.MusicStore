@@ -13,6 +13,9 @@ namespace Avalonia.MusicStore.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        public Interaction<MusicStoreViewModel, AlbumViewModel?> ShowDialog { get; }
+
+        public ICommand BuyMusicCommand { get; }
         public MainWindowViewModel()
         {
             ShowDialog = new Interaction<MusicStoreViewModel, AlbumViewModel?>();
@@ -33,11 +36,7 @@ namespace Avalonia.MusicStore.ViewModels
             RxApp.MainThreadScheduler.Schedule(LoadAlbums);
         }
 
-        public ICommand BuyMusicCommand { get; }
-
-        public Interaction<MusicStoreViewModel, AlbumViewModel?> ShowDialog { get; }
-
-        public ObservableCollection<AlbumViewModel> Albums { get; } = new();
+        public ObservableCollection<AlbumViewModel> Albums { get; } = [];
 
         private async void LoadAlbums()
         {

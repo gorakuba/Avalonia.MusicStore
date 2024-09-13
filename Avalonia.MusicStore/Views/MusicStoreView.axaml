@@ -12,10 +12,11 @@
 			<ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" />
 		</StackPanel>
 		<Button Content="Buy Album"
-				DockPanel.Dock="Bottom"
-				HorizontalAlignment="Center" Command="{Binding BuyMusicCommand}"/>
+                DockPanel.Dock="Bottom"
+                HorizontalAlignment="Center"
+                Command="{Binding BuyMusicCommand}"/>
 		<ListBox ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedAlbum}"
-    Background="Transparent" Margin="0 20">
+                 Background="Transparent" Margin="0 20">
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
 					<WrapPanel />

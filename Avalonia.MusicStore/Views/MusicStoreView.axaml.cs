@@ -8,6 +8,6 @@ public partial class MusicStoreView : UserControl
 {
     public MusicStoreView()
     {
-
+        InitializeComponent();
     }
 }

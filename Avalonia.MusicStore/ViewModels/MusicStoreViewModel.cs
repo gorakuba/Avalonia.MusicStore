@@ -11,10 +11,23 @@ namespace Avalonia.MusicStore.ViewModels
 {
     public class MusicStoreViewModel : ViewModelBase
     {
+        private CancellationTokenSource? _cancellationTokenSource;
+
+        public MusicStoreViewModel()
+        {
+            BuyMusicCommand = ReactiveCommand.Create(() =>
+            {
+                return SelectedAlbum;
+            });
+
+            this.WhenAnyValue(x => x.SearchText)
+                .Throttle(TimeSpan.FromMilliseconds(400))
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(DoSearch!);
+        }
+
         private string? _searchText;
         private bool _isBusy;
-
-        public ReactiveCommand<Unit, AlbumViewModel?> BuyMusicCommand { get; }
 
         public string? SearchText
         {
@@ -28,7 +41,6 @@ namespace Avalonia.MusicStore.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isBusy, value);
         }
 
-
         private AlbumViewModel? _selectedAlbum;
 
         public ObservableCollection<AlbumViewModel> SearchResults { get; } = new();
@@ -39,22 +51,14 @@ namespace Avalonia.MusicStore.ViewModels
             set => this.RaiseAndSetIfChanged(ref _selectedAlbum, value);
         }
 
-        public MusicStoreViewModel()
-        {
-            BuyMusicCommand = ReactiveCommand.Create(() =>
-            {
-                return SelectedAlbum;
-            });
-        }
-
         private async void DoSearch(string s)
         {
-            IsBusy = true;
-            SearchResults.Clear();
-
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = _cancellationTokenSource.Token;
+
+            IsBusy = true;
+            SearchResults.Clear();
 
             if (!string.IsNullOrWhiteSpace(s))
             {
@@ -63,7 +67,6 @@ namespace Avalonia.MusicStore.ViewModels
                 foreach (var album in albums)
                 {
                     var vm = new AlbumViewModel(album);
-
                     SearchResults.Add(vm);
                 }
 
@@ -89,6 +92,6 @@ namespace Avalonia.MusicStore.ViewModels
             }
         }
 
-        private CancellationTokenSource? _cancellationTokenSource;
+        public ReactiveCommand<Unit, AlbumViewModel?> BuyMusicCommand { get; }
     }
 }
